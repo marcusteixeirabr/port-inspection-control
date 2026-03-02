@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: port-inspection-app
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace
+    command: sleep infinity
