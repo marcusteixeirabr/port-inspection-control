@@ -1,0 +1,38 @@
+### Java ###
+*.class
+*.log
+*.ctxt
+hs_err_pid*
+replay_pid*
+
+### Packages ###
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### VSCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Devcontainer ###
+.devcontainer/docker-compose.override.yml
+
+### H2 Database ###
+*.mv.db
+*.trace.db
