@@ -91,44 +91,56 @@ Entidades principais:
 
 ### 8. Diagrama de Classes
 
-```mermaid
 classDiagram
 
 class Vessel {
-    Long id
-    String imo
-    String name
-    String flag
-    RiskLevel riskLevel
-    Integer priority
-    LocalDate lastInspectionDate
-    
-    +calculatePriority()
-    +isInsideInspectionWindow()
+  - String imo
+  - String name
+  - String flag
+  - String vesselType
+  - int yearBuilt
+  - double lengthOverall
+  - double beam
+  - RiskLevel riskLevel
+  - LocalDate lastInspectionDate
+  + Priority calculateCialaPriority(LocalDate today)
+  + LocalDate nextInspectionDueDate()
 }
 
 class PortCall {
-    Long id
-    LocalDate actualArrivalDate
-    LocalDate actualDepartureDate
-    String terminal
-    
-    RiskLevel riskLevelAtArrival
-    Integer priorityAtArrival
-    Boolean insideInspectionWindowAtArrival
+  - Vessel vessel
+  - LocalDateTime estimatedArrival
+  - LocalDateTime estimatedDeparture
+  - LocalDateTime actualArrival
+  - LocalDateTime actualDeparture
+  - String locationDescription
+  - RiskLevel riskSnapshot
+  - Priority prioritySnapshot
+  + void registerArrival(LocalDateTime arrivalTime)
+  + boolean isCurrentlyMoored()
+  + boolean isArrivingWithin(int hours, LocalDateTime now)
+  + LocalDateTime getNextMovementTime()
 }
 
-class Inspection {
-    Long id
-    LocalDate inspectionDate
-    String lastPort
-    String nextPort
+class RiskLevel {
+  <<enum>>
+  LOW
+  MEDIUM
+  HIGH
+  + Priority calculatePriority(LocalDate lastInspectionDate, LocalDate today)
 }
 
-Vessel "1" --> "0..*" PortCall
-Vessel "1" --> "0..*" Inspection
-PortCall "1" --> "0..1" Inspection
-```
+class Priority {
+  <<enum>>
+  P0
+  P2
+  P1
+}
+
+Vessel --> RiskLevel
+PortCall --> Vessel
+PortCall --> RiskLevel
+PortCall --> Priority
 
 ---
 
@@ -155,3 +167,35 @@ Fase 3 – Implementação de Inspection
 Fase 4 – Relatórios dinâmicos
 Fase 5 – Controle de usuários e autenticação
 Fase 6 – Possível integração futura com sistemas externos
+
+---
+
+### 11. Estrutura de Diretórios
+
+```
+src
+ ├── main
+ │    └── java
+ │         └── br
+ │              └── gov
+ │                   └── psc
+ │                        ├── domain
+ │                        │     ├── vessel
+ │                        │     │     ├── Vessel.java
+ │                        │     │     ├── RiskLevel.java
+ │                        │     │     └── Priority.java
+ │                        │     └── portcall
+ │                        │           └── PortCall.java
+ │                        └── PscApplication.java
+ │
+ └── test
+      └── java
+           └── br
+                └── gov
+                     └── psc
+                          └── domain
+                               ├── vessel
+                               │     └── VesselPriorityTest.java
+                               └── portcall
+                                     └── PortCallTest.java
+```
