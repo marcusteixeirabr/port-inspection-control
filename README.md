@@ -91,6 +91,7 @@ Entidades principais:
 
 ### 8. Diagrama de Classes
 
+```mermaid
 classDiagram
 
 class Vessel {
@@ -141,6 +142,7 @@ Vessel --> RiskLevel
 PortCall --> Vessel
 PortCall --> RiskLevel
 PortCall --> Priority
+```
 
 ---
 
