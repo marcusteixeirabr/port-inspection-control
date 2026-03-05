@@ -1,6 +1,8 @@
 package br.com.gvi.portinspection.domain.vessel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,9 +13,8 @@ public class VesselTest {
 
         Vessel vessel = new Vessel(
             "MSC ANNA",
-            300,
-            48
-        );
+            300, 
+            48);
 
         assertEquals("MSC ANNA", vessel.getName());
         assertEquals(300, vessel.getLength());
@@ -23,10 +24,9 @@ public class VesselTest {
     @Test
     void newVesselShouldBeActive() {
         Vessel vessel = new Vessel(
-            "ANNA EXPRESS",
-            200,
-            32
-        );
+            "ANNA EXPRESS", 
+            300, 
+            48);
 
         assertTrue(vessel.isActive());
     }
@@ -34,10 +34,9 @@ public class VesselTest {
     @Test
     void shouldDeactivateVessel() {
         Vessel vessel = new Vessel(
-            "HMM ANNA",
-            198,
-            30
-        );
+            "HMM ANNA", 
+            198, 
+            30);
 
         vessel.deactivate();
 
