@@ -18,7 +18,7 @@ public class CialaPolicyTest {
         LocalDate lastInspection = LocalDate.now().minusMonths(5);
 
         Priority result = policy.calculatePriority(
-            RiskLevel.HIGHT,
+            RiskLevel.HIGH,
             lastInspection,
             LocalDate.now()
         );
@@ -58,7 +58,7 @@ public class CialaPolicyTest {
     void vesselNeverInspectedShoudBePriority1() {
         
         Priority result = policy.calculatePriority(
-            RiskLevel.HIGHT,
+            RiskLevel.HIGH,
             null,
             LocalDate.now()
         );
