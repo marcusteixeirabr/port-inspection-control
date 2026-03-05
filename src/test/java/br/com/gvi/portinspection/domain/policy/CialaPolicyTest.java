@@ -5,6 +5,7 @@ import br.com.gvi.portinspection.domain.vessel.RiskLevel;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
@@ -64,6 +65,52 @@ public class CialaPolicyTest {
         );
 
         assertEquals(Priority.P1, result);
+    }
+
+    @Test
+    void highRiskInspectionShouldExpireInTwoMonths() {
+        
+        LocalDate inspectionDate = LocalDate.of(2025,1, 10);
+
+        LocalDate dueDate = policy.calculatePriority(
+            RiskLevel.HIGH,
+            inspectionDate
+        );
+
+        assertEquals(LocalDate.of(2025, 3, 10), dueDate);
+    }
+
+    @Test
+    void standardRiskInspectionShouldExpireInFiveMonths() { 
+        
+        LocalDate inspectionDate = LocalDate.of(2025,1, 10);
+
+        LocalDate dueDate = policy.calculatePriority(
+            RiskLevel.STANDARD,
+            inspectionDate
+        );
+
+        assertEquals(LocalDate.of(2025, 6, 10), dueDate);
+    }
+
+    @Test
+    void lowRiskInspectionShouldExpireInNineMonths() {
+        
+        LocalDate inspectionDate = LocalDate.of(2025,1, 10);
+
+        LocalDate dueDate = policy.calculatePriority(
+            RiskLevel.LOW,
+            inspectionDate
+        );
+
+        assertEquals(LocalDate.of(2025, 10, 10), dueDate);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInspectionDateIsNull() {
+
+        assertThrows(IllegalArgumentException.class,
+             () -> policy.calculateInspectionDueDate(RiskLevel.HIGH, null));
     }
 
 }
