@@ -72,7 +72,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculatePriority(
+        LocalDate dueDate = policy.calculateInspectionDueDate(
             RiskLevel.HIGH,
             inspectionDate
         );
@@ -85,7 +85,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculatePriority(
+        LocalDate dueDate = policy.calculateInspectionDueDate(
             RiskLevel.STANDARD,
             inspectionDate
         );
@@ -98,7 +98,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculatePriority(
+        LocalDate dueDate = policy.calculateInspectionDueDate(
             RiskLevel.LOW,
             inspectionDate
         );
