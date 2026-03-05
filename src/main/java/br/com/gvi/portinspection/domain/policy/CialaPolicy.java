@@ -91,4 +91,24 @@ public class CialaPolicy {
             return Priority.P1;
         }
     }
+
+    /**
+    * Calcula a data de vencimento da inspeção
+    * com base no risco e na data da última inspeção.
+    */
+    public LocalDate calculateInspectionDueDate(
+        RiskLevel riskLevel,
+        LocalDate inspectionDate
+        ) {
+
+        if (inspectionDate == null) {
+            throw new IllegalArgumentException("A data da última inspeção não pode ser nula para calcular a data de vencimento.");
+        }
+
+        return switch (riskLevel) {
+            case LOW -> inspectionDate.plusMonths(9);
+            case STANDARD -> inspectionDate.plusMonths(5);
+            case HIGH -> inspectionDate.plusMonths(2);
+        };
+    }
 }
