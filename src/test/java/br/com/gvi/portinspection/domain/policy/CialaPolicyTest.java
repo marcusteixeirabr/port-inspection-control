@@ -24,8 +24,46 @@ public class CialaPolicyTest {
         );
 
         assertEquals(Priority.P1, result);
-
     }
 
+    @Test
+    void standardRiskWithSevenMonthsShoudBePriority2() {
+
+        LocalDate lastInspection = LocalDate.now().minusMonths(7);
+
+        Priority result = policy.calculatePriority(
+            RiskLevel.STANDARD,
+            lastInspection,
+            LocalDate.now()
+        );
+
+        assertEquals(Priority.P2, result);
+    }
+
+    @Test
+    void lowRiskWithFourMonthsShoudBePriority0() {
+        
+        LocalDate lastInspection = LocalDate.now().minusMonths(4);
+
+        Priority result = policy.calculatePriority(
+            RiskLevel.LOW,
+            lastInspection,
+            LocalDate.now()
+        );
+
+        assertEquals(Priority.P0, result);
+    }
+
+    @Test
+    void vesselNeverInspectedShoudBePriority1() {
+        
+        Priority result = policy.calculatePriority(
+            RiskLevel.HIGHT,
+            null,
+            LocalDate.now()
+        );
+
+        assertEquals(Priority.P1, result);
+    }
 
 }
