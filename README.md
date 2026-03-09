@@ -109,26 +109,47 @@ class Vessel {
 }
 
 class PortCall {
+  - int portCallID
   - Vessel vessel
-  - LocalDateTime estimatedArrival
-  - LocalDateTime estimatedDeparture
-  - LocalDateTime actualArrival
-  - LocalDateTime actualDeparture
-  - String locationDescription
+  - String terminal
+  - VesselStatus vesselStatus
+  - PortCallStatus portCallStatus
+  - LocalDate estimatedArrivalDate
+  - LocalTime estimatedArrivalTime
+  - LocalDate estimatedDepartureDate
+  - LocalTime estimatedDepartureTime
+  - LocalDate actualArrival
+  - LocalDate actualDeparture
   - RiskLevel riskSnapshot
   - Priority prioritySnapshot
+  + boolean isCurrentlyDocked
+  + boolean isCurrentlyDeparted
+  + void registerArrival(LocalDate arrivalDate)
+  + void registerDeparture(LocalDate departureDate)
   + void registerArrival(LocalDateTime arrivalTime)
-  + boolean isCurrentlyMoored()
-  + boolean isArrivingWithin(int hours, LocalDateTime now)
-  + LocalDateTime getNextMovementTime()
+}
+
+class CialaPolicy {
+  + Priority calculatePriority(
+        RiskLevel riskLevel,
+        LocalDate lastInspectionDate,
+        LocalDate referenceDate
+    )
+  - Priority calculateLowRisk(long months)
+  - Priority calculateStandardRisk(long months)
+  - Priority calculateHighRisk(long months)
+  + LocalDate calculateInspectionDueDate(
+        RiskLevel riskLevel,
+        LocalDate inspectionDate
+    )
+
 }
 
 class RiskLevel {
   <<enum>>
   LOW
-  MEDIUM
+  STANDARD
   HIGH
-  + Priority calculatePriority(LocalDate lastInspectionDate, LocalDate today)
 }
 
 class Priority {
@@ -138,10 +159,30 @@ class Priority {
   P1
 }
 
+class VesselStatus {
+  <<enum>>
+  NAVIGATING
+  DRIFTING
+  ANCHORED
+  MANEUVRING
+  BERTHED
+}
+
+class PortCallStatus {
+  <<enum>>
+  PLANNED
+  BERTHED
+  CLOSED
+  ABORTED
+}
+
 Vessel --> RiskLevel
+Vessel --> Priority
 PortCall --> Vessel
-PortCall --> RiskLevel
-PortCall --> Priority
+PortCall --> PortCallStatus
+PortCall --> VesselStatus
+CialaPolicy --> Priority
+CialaPolicy --> RiskLevel
 ```
 
 ---
@@ -155,8 +196,7 @@ Inspector -->|Register Vessel| System
 Inspector -->|Register Port Call| System
 Inspector -->|Register Inspection| System
 Inspector -->|Generate Monthly Report| System
-System -->|Calculate Priority| Inspector
-System -->|Identify Inspection Window| Inspector
+System -->|Show Port Calls| Inspector
 ```
 
 ---
@@ -182,12 +222,18 @@ src
  │              └── gov
  │                   └── psc
  │                        ├── domain
+ │                        │     ├── policy
+ │                        │     │     └── CialaPolicy.java 
  │                        │     ├── vessel
  │                        │     │     ├── Vessel.java
  │                        │     │     ├── RiskLevel.java
  │                        │     │     └── Priority.java
- │                        │     └── portcall
- │                        │           └── PortCall.java
+ │                        │     ├── portcall
+ │                        │     |     ├── PortCall.java
+ |                        |     |     ├── PortCallStatus.java
+ │                        │     |     └── VesselStatus.java
+ │                        │     └── service
+ │                        │           └── PortCallService.java
  │                        └── PscApplication.java
  │
  └── test
@@ -198,6 +244,8 @@ src
                           └── domain
                                ├── vessel
                                │     └── VesselPriorityTest.java
-                               └── portcall
-                                     └── PortCallTest.java
+                               ├── portcall
+                               |     └── PortCallTest.java
+                               └──  service
+                                     └── PortCallServiceTest.java   
 ```
