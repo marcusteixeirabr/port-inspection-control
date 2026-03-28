@@ -1,5 +1,7 @@
 package br.com.gvi.portinspection.domain.vessel;
 
+import br.com.gvi.portinspection.domain.policy.CialaPolicy;
+
 import java.time.LocalDate;
 
 public class Vessel {
@@ -16,13 +18,22 @@ public class Vessel {
     private LocalDate lastInspectionDate;
     private boolean active;
 
-    public Vessel(String name, int length, int beam) {
+    public Vessel(String imo, String name, String flag, int yearBuilt, String type, int length, int beam,
+            RiskLevel riskLevel, LocalDate lastInspectionDate) {
+        this.imo = imo;
         this.name = name;
+        this.flag = flag;
+        this.yearBuilt = yearBuilt;
+        this.type = type;
         this.length = length;
         this.beam = beam;
+        this.riskLevel = riskLevel;
+        this.lastInspectionDate = lastInspectionDate;
         this.active = true;
+        this.priority = CialaPolicy.calculatePriority(
+            riskLevel, lastInspectionDate, LocalDate.now());
     }
-
+    
     public String getImo() {
         return imo;
     }
@@ -74,8 +85,9 @@ public class Vessel {
     public Priority getPriority() {
         return priority;
     }
-    public void setPriority(Priority priority) {
-        this.priority = priority;
+     public void setPriority() {
+        this.priority = CialaPolicy.calculatePriority(
+            getRiskLevel(), getLastInspectionDate(), LocalDate.now());
     }
     public LocalDate getLastInspectionDate() {
         return lastInspectionDate;
@@ -95,12 +107,11 @@ public class Vessel {
 
     @Override
     public String toString() {
-    return "Vessel{" +
-            "imo='" + imo + '\'' +
-            ", name='" + name + '\'' +
-            ", flag='" + flag + '\'' +
-            ", type='" + type + '\'' +
-            '}';
-}
+        return "Vessel [imo=" + imo + ", name=" + name + ", flag=" + flag + ", yearBuilt=" + yearBuilt + ", type="
+                + type + ", length=" + length + ", beam=" + beam + ", riskLevel=" + riskLevel + ", priority=" + priority
+                + ", lastInspectionDate=" + lastInspectionDate + ", active=" + active + "]";
+    }
+
+    
 
 }

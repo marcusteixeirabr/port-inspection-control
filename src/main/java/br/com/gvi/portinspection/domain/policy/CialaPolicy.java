@@ -22,7 +22,7 @@ public class CialaPolicy {
      * - na data da última inspeção
      * - na data de referência (normalmente hoje)
      */
-    public Priority calculatePriority(
+    public static Priority calculatePriority(
         RiskLevel riskLevel,
         LocalDate lastInspectionDate,
         LocalDate referenceDate
@@ -30,6 +30,10 @@ public class CialaPolicy {
         // Se nunca foi inspecionado, consideramos prioridade máxima (P1)
         if (lastInspectionDate == null) {
             return Priority.P1;
+        }
+
+        if (riskLevel == null) {
+            throw new IllegalArgumentException("O nível de risco não pode ser nulo para calcular a prioridade.");
         }
 
         // Calcula quantos meses se passaram desde a última inspeção
@@ -45,70 +49,75 @@ public class CialaPolicy {
     }
 
     /**
-     * Regras para risco BAIXO:
-     * 0–9 meses  -> P0
-     * 10–18 meses -> P2
-     * >=19 meses -> P1
-     */
-    private Priority calculateLowRisk(long months) {
-        if (months <= 9) {
-            return Priority.P0;
-        } else if (months <= 18) {
-            return Priority.P2;
-        } else {
-            return Priority.P1;
-        }
-    }
-
-    /**
-     * Regras para risco PADRÃO:
-     * 0–5 meses  -> P0
-     * 6–8 meses  -> P2
-     * >=9 meses -> P1
-     */
-    private Priority calculateStandardRisk(long months) {
-        if (months <= 5) {
-            return Priority.P0;
-        } else if (months <= 8) {
-            return Priority.P2;
-        } else {
-            return Priority.P1;
-        }
-    }
-
-    /**
-     * Regras para risco ALTO:
-     * 0–2 meses  -> P0
-     * 3–4 meses  -> P2
-     * >=5 meses -> P1
-     */
-    private Priority calculateHighRisk(long months) {
-        if (months <= 2) {
-            return Priority.P0;
-        } else if (months <= 4) {
-            return Priority.P2;
-        } else {
-            return Priority.P1;
-        }
-    }
-
-    /**
-    * Calcula a data de vencimento da inspeção
-    * com base no risco e na data da última inspeção.
+     * Calcula a data de vencimento da inspeção
+     * com base no risco e na data da última inspeção.
     */
-    public LocalDate calculateInspectionDueDate(
+    public static LocalDate calculateInspectionDueDate(
         RiskLevel riskLevel,
         LocalDate inspectionDate
         ) {
-
+    
         if (inspectionDate == null) {
             throw new IllegalArgumentException("A data da última inspeção não pode ser nula para calcular a data de vencimento.");
         }
-
+    
+        if (riskLevel == null) {
+            throw new IllegalArgumentException("O nível de risco não pode ser nulo para calcular a data de vencimento.");
+        }
+    
         return switch (riskLevel) {
             case LOW -> inspectionDate.plusMonths(9);
             case STANDARD -> inspectionDate.plusMonths(5);
             case HIGH -> inspectionDate.plusMonths(2);
         };
     }
+
+    /**
+     * Regras para risco BAIXO:
+     * 0–9 meses  -> P0
+     * 10–18 meses -> P2
+     * >=19 meses -> P1
+    */
+   private static Priority calculateLowRisk(long months) {
+       if (months <= 9) {
+           return Priority.P0;
+        } else if (months <= 18) {
+            return Priority.P2;
+        } else {
+            return Priority.P1;
+        }
+    }
+    
+    /**
+     * Regras para risco PADRÃO:
+     * 0–5 meses  -> P0
+     * 6–8 meses  -> P2
+     * >=9 meses -> P1
+    */
+   private static Priority calculateStandardRisk(long months) {
+       if (months <= 5) {
+           return Priority.P0;
+        } else if (months <= 8) {
+            return Priority.P2;
+        } else {
+            return Priority.P1;
+        }
+    }
+    
+    /**
+     * Regras para risco ALTO:
+     * 0–2 meses  -> P0
+     * 3–4 meses  -> P2
+     * >=5 meses -> P1
+    */
+   private static Priority calculateHighRisk(long months) {
+       if (months <= 2) {
+           return Priority.P0;
+        } else if (months <= 4) {
+            return Priority.P2;
+        } else {
+            return Priority.P1;
+        }
+    }
+    
 }
