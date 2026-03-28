@@ -11,9 +11,27 @@ import org.junit.jupiter.api.Test;
 
 public class PortCallTest {
 
-    private final Vessel vessel = new Vessel("Vessel Name", 100, 30);
+    private final Vessel vessel = new Vessel(
+        "9998767", 
+        "Dalia Express", 
+        "Singapore",
+        2020, 
+        "Container Carrier", 
+        200, 
+        30, 
+        RiskLevel.STANDARD, 
+        LocalDate.of(2023, 6, 5)
+    );
 
-    private final PortCall portCall = new PortCall(vessel, "Terminal A", VesselStatus.NAVIGATING, LocalDate.of(2024, 6, 1), null, null, null);
+    private final PortCall portCall = new PortCall(
+        vessel, 
+        "PNAVE", 
+        VesselStatus.NAVIGATING, 
+        LocalDate.of(2024, 6, 1), 
+        null, 
+        null, 
+        null
+    );
 
     @Test
     void whenCreatePortCallThrowExceptionIfVesselIsNull() {
@@ -29,17 +47,11 @@ public class PortCallTest {
 
     @Test
     void whenPortCallIsCreatedShouldCaptureVesselRiskSnapshot() {
-        vessel.setRiskLevel(RiskLevel.LOW);
-        portCall.registerRiskLevelSnapshot(vessel.getRiskLevel());
-
-        assertEquals(portCall.getRiskLevelSnapshot(), RiskLevel.LOW);
+        assertEquals(portCall.getRiskLevelSnapshot(), RiskLevel.STANDARD);
     }
 
     @Test
     void whenPortCallIsCreatedShouldCaptureVesselPrioritySnapshot() {
-        vessel.setPriority(Priority.P1);
-        portCall.registerPrioritySnapshot(vessel.getPriority());
-
         assertEquals(portCall.getPrioritySnapshot(), Priority.P1);
     }
 

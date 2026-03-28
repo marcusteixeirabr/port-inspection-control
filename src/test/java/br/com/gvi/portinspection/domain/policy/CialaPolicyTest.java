@@ -11,14 +11,12 @@ import java.time.LocalDate;
 
 public class CialaPolicyTest {
 
-    private final CialaPolicy policy = new CialaPolicy();
-
     @Test
     void highRiskWithFiveMonthsShoudBePriority1() {
 
         LocalDate lastInspection = LocalDate.now().minusMonths(5);
 
-        Priority result = policy.calculatePriority(
+        Priority result = CialaPolicy.calculatePriority(
             RiskLevel.HIGH,
             lastInspection,
             LocalDate.now()
@@ -32,7 +30,7 @@ public class CialaPolicyTest {
 
         LocalDate lastInspection = LocalDate.now().minusMonths(7);
 
-        Priority result = policy.calculatePriority(
+        Priority result = CialaPolicy.calculatePriority(
             RiskLevel.STANDARD,
             lastInspection,
             LocalDate.now()
@@ -46,7 +44,7 @@ public class CialaPolicyTest {
         
         LocalDate lastInspection = LocalDate.now().minusMonths(4);
 
-        Priority result = policy.calculatePriority(
+        Priority result = CialaPolicy.calculatePriority(
             RiskLevel.LOW,
             lastInspection,
             LocalDate.now()
@@ -58,7 +56,7 @@ public class CialaPolicyTest {
     @Test
     void vesselNeverInspectedShoudBePriority1() {
         
-        Priority result = policy.calculatePriority(
+        Priority result = CialaPolicy.calculatePriority(
             RiskLevel.HIGH,
             null,
             LocalDate.now()
@@ -72,7 +70,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculateInspectionDueDate(
+        LocalDate dueDate = CialaPolicy.calculateInspectionDueDate(
             RiskLevel.HIGH,
             inspectionDate
         );
@@ -85,7 +83,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculateInspectionDueDate(
+        LocalDate dueDate = CialaPolicy.calculateInspectionDueDate(
             RiskLevel.STANDARD,
             inspectionDate
         );
@@ -98,7 +96,7 @@ public class CialaPolicyTest {
         
         LocalDate inspectionDate = LocalDate.of(2025,1, 10);
 
-        LocalDate dueDate = policy.calculateInspectionDueDate(
+        LocalDate dueDate = CialaPolicy.calculateInspectionDueDate(
             RiskLevel.LOW,
             inspectionDate
         );
@@ -110,7 +108,7 @@ public class CialaPolicyTest {
     void shouldThrowExceptionWhenInspectionDateIsNull() {
 
         assertThrows(IllegalArgumentException.class,
-             () -> policy.calculateInspectionDueDate(RiskLevel.HIGH, null));
+             () -> CialaPolicy.calculateInspectionDueDate(RiskLevel.HIGH, null));
     }
 
 }

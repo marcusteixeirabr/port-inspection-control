@@ -5,39 +5,33 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 
 public class VesselTest {
 
+    Vessel vessel = new Vessel(
+        "9998767",
+        "MSC ANNA", 
+        "Panama", 
+        2021, 
+        "Container Carrier", 
+        300, 
+        48, 
+        RiskLevel.HIGH, 
+        LocalDate.of(2025, 4, 5));
+    
     @Test
-    void shouldCreateVessel() {
-
-        Vessel vessel = new Vessel(
-            "MSC ANNA",
-            300, 
-            48);
-
-        assertEquals("MSC ANNA", vessel.getName());
-        assertEquals(300, vessel.getLength());
-        assertEquals(48, vessel.getBeam());
+    void whenCreateVesselPriorityShoudBeCalculated() {
+        assertEquals(Priority.P1, vessel.getPriority());
     }
 
     @Test
     void newVesselShouldBeActive() {
-        Vessel vessel = new Vessel(
-            "ANNA EXPRESS", 
-            300, 
-            48);
-
         assertTrue(vessel.isActive());
     }
 
     @Test
     void shouldDeactivateVessel() {
-        Vessel vessel = new Vessel(
-            "HMM ANNA", 
-            198, 
-            30);
-
         vessel.deactivate();
 
         assertFalse(vessel.isActive());
