@@ -1,0 +1,189 @@
+/* ============================================================
+   SOBRE.CSS — estilos exclusivos da página Sobre
+   ============================================================ */
+
+/* ── FUNDO COM GRADE ───────────────────────────────────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── LINHA LATERAL DECORATIVA ──────────────────────────────── */
+.side-line {
+    position: fixed;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201, 168, 76, 0.3), transparent);
+    z-index: 0;
+}
+
+/* ── CABEÇALHO DA PÁGINA ───────────────────────────────────── */
+.page-header {
+    margin-bottom: 72px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.25s;
+}
+.page-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+.page-header h1 em {
+    color: var(--gold);
+    font-style: normal;
+}
+.page-header .lead {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: #b0c0d0;
+    max-width: 580px;
+}
+
+/* ── SEÇÕES DE CONTEÚDO ────────────────────────────────────── */
+.content-section {
+    margin-bottom: 64px;
+    opacity: 0;
+    transform: translateY(18px);
+}
+.content-section.visible {
+    animation: fadeUp 0.7s ease forwards;
+}
+.content-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--white);
+}
+.content-section p {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: #b0c0d0;
+    margin-bottom: 14px;
+}
+
+/* ── BLOCO DE DESTAQUE ─────────────────────────────────────── */
+.highlight-box {
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    border-left: 3px solid var(--gold);
+    padding: 28px 32px;
+    margin-top: 8px;
+}
+.highlight-box p {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: #c8d8e8;
+    margin: 0;
+}
+.highlight-box strong {
+    color: var(--gold-light);
+    font-weight: 600;
+}
+
+/* ── TIMELINE ──────────────────────────────────────────────── */
+.timeline {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+}
+.timeline-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0 24px;
+    position: relative;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 99px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(201, 168, 76, 0.2);
+}
+.timeline-dot {
+    position: absolute;
+    left: 93px;
+    top: 22px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 2px solid var(--gold);
+}
+.timeline-year {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--gold);
+    padding: 20px 24px 20px 0;
+    text-align: right;
+}
+.timeline-content {
+    padding: 16px 0 16px 24px;
+}
+.timeline-content h4 {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-bottom: 4px;
+}
+.timeline-content p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+}
+
+/* ── GRID DE PILARES ───────────────────────────────────────── */
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+}
+.pillar {
+    background: rgba(17, 34, 64, 0.7);
+    border: 1px solid rgba(201, 168, 76, 0.12);
+    padding: 24px 20px;
+    border-radius: 2px;
+    transition: border-color 0.3s, transform 0.3s;
+}
+.pillar:hover {
+    border-color: rgba(201, 168, 76, 0.35);
+    transform: translateY(-3px);
+}
+.pillar-icon {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+.pillar h4 {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--white);
+    margin-bottom: 8px;
+}
+.pillar p {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0;
+}
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 580px) {
+    .side-line { display: none; }
+    .timeline-item { grid-template-columns: 72px 1fr; }
+    .timeline-item::before { left: 71px; }
+    .timeline-dot { left: 65px; }
+}

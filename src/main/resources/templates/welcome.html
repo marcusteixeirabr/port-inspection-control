@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boas-vindas | PSCO – DelCap Itajaí</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/welcome.css">
+</head>
+<body>
+
+<div class="radar-decoration"></div>
+
+<div class="page-wrapper">
+
+    <!-- ── CABEÇALHO ─────────────────────────────────────────── -->
+    <header>
+        <svg class="anchor-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="14" r="6"/>
+            <line x1="32" y1="20" x2="32" y2="54"/>
+            <line x1="16" y1="30" x2="48" y2="30"/>
+            <path d="M16 54 Q8 50 8 42"/>
+            <path d="M48 54 Q56 50 56 42"/>
+            <path d="M16 54 Q24 60 32 54"/>
+            <path d="M48 54 Q40 60 32 54"/>
+        </svg>
+        <div class="header-text">
+            <p class="label">Marinha do Brasil</p>
+            <h2>Delegacia da Capitania dos Portos em Itajaí — SC</h2>
+        </div>
+    </header>
+
+    <!-- ── HERO ──────────────────────────────────────────────── -->
+    <section class="hero">
+        <p class="eyebrow">Port State Control — DelCap Itajaí</p>
+        <h1>
+            Bem-vindo ao<br>
+            <span>Controle do<br>Estado do Porto</span>
+        </h1>
+        <div class="gold-rule"></div>
+        <p class="intro">
+            Você acaba de ingressar em uma das equipes mais especializadas da Marinha do Brasil.
+            Como <strong>Port State Control Officer (PSCO)</strong>, sua missão é garantir que os
+            navios que aportam em Itajaí operem com segurança, respeitem o meio ambiente e
+            cumpram as convenções internacionais da IMO.
+        </p>
+    </section>
+
+    <!-- ── CARTÕES ────────────────────────────────────────────── -->
+    <section class="cards-grid" id="cards">
+
+        <div class="card" data-delay="0">
+            <p class="card-number">01 / FUNÇÃO</p>
+            <h3>O que é o PSC?</h3>
+            <p>
+                O Port State Control é um regime de inspeção internacional que permite ao
+                Estado do Porto verificar navios estrangeiros. Itajaí é um dos portos mais
+                movimentados do sul do Brasil, com contêineres, granéis e cabotagem.
+            </p>
+        </div>
+
+        <div class="card" data-delay="150">
+            <p class="card-number">02 / FUNDAMENTO</p>
+            <h3>Convenções IMO</h3>
+            <p>
+                Você atuará com base em SOLAS, MARPOL, STCW, MLC 2006 e outras convenções
+                que regulam segurança da vida no mar, prevenção da poluição e
+                condições de trabalho a bordo.
+            </p>
+        </div>
+
+        <div class="card" data-delay="300">
+            <p class="card-number">03 / AUTORIDADE</p>
+            <h3>Poder de Retenção</h3>
+            <p>
+                Quando deficiências graves são encontradas, o PSCO tem autoridade para
+                <em>deter</em> o navio até a correção, protegendo tripulantes,
+                o meio ambiente e outros usuários do porto.
+            </p>
+        </div>
+
+        <div class="card" data-delay="450">
+            <p class="card-number">04 / EQUIPE</p>
+            <h3>Sua Nova Equipe</h3>
+            <p>
+                Você integra um grupo de oficiais experientes comprometidos com a excelência
+                técnica. Contamos com você para manter o padrão de qualidade das inspeções
+                da DelCap Itajaí.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- ── MISSÃO ─────────────────────────────────────────────── -->
+    <div class="mission-block">
+        <p class="mission-label">Nossa Missão</p>
+        <blockquote>
+            "Garantir que os navios que operam em águas brasileiras atendam aos padrões
+            internacionais de segurança e proteção ambiental — em defesa da vida humana
+            no mar e da soberania nacional nos nossos portos."
+        </blockquote>
+    </div>
+
+    <!-- ── COORDENADAS ────────────────────────────────────────── -->
+    <div class="coordinates">
+        <div class="coord-item">
+            <strong>Posição</strong>
+            26°54'40"S / 048°39'55"W
+        </div>
+        <div class="coord-item">
+            <strong>Porto</strong>
+            Itajaí — Santa Catarina
+        </div>
+        <div class="coord-item">
+            <strong>Autoridade</strong>
+            Marinha do Brasil — DPC
+        </div>
+        <div class="coord-item">
+            <strong>Regime</strong>
+            Acordo de Viña del Mar (PSC)
+        </div>
+    </div>
+
+    <!-- ── CTA ───────────────────────────────────────────────── -->
+    <div class="cta-area">
+        <a href="/sobre" class="btn-primary">Conheça o PSC →</a>
+    </div>
+
+    <!-- ── RODAPÉ ─────────────────────────────────────────────── -->
+    <footer>
+        <span class="footer-brand">DelCap Itajaí / PSC</span>
+        <span id="clock"></span>
+        <span>Sistema Interno — Uso Restrito</span>
+    </footer>
+
+</div>
+
+<script src="/js/global.js"></script>
+<script src="/js/welcome.js"></script>
+</body>
+</html>

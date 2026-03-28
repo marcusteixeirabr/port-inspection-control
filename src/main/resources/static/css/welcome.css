@@ -1,0 +1,221 @@
+/* ============================================================
+   WELCOME.CSS — estilos exclusivos da página inicial
+   ============================================================ */
+
+/* ── DECORAÇÃO DE RADAR ────────────────────────────────────── */
+.radar-decoration {
+    position: fixed;
+    top: -120px;
+    right: -120px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, 0.12);
+    z-index: 0;
+    animation: radarPulse 6s ease-in-out infinite;
+    pointer-events: none;
+}
+.radar-decoration::before,
+.radar-decoration::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, 0.08);
+    inset: 15%;
+}
+.radar-decoration::after { inset: 35%; }
+
+@keyframes radarPulse {
+    0%, 100% { transform: scale(1);    opacity: 0.6; }
+    50%       { transform: scale(1.04); opacity: 1;   }
+}
+
+/* ── CABEÇALHO ─────────────────────────────────────────────── */
+header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 72px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeUp 0.8s ease forwards 0.1s;
+}
+
+.anchor-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.header-text .label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.header-text h2 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+}
+
+/* ── HERO ──────────────────────────────────────────────────── */
+.hero { margin-bottom: 80px; }
+
+.hero .eyebrow {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.3s;
+}
+
+.hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.45s;
+}
+.hero h1 span {
+    color: var(--gold);
+    display: block;
+}
+
+.hero .intro {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #b0c0d0;
+    max-width: 600px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+/* ── CARTÕES ───────────────────────────────────────────────── */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 72px;
+}
+
+.card {
+    background: rgba(17, 34, 64, 0.7);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    border-radius: 2px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: border-color 0.3s, transform 0.3s;
+}
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.35s ease;
+}
+.card:hover {
+    border-color: rgba(201, 168, 76, 0.4);
+    transform: translateY(-3px);
+}
+.card:hover::before { transform: scaleY(1); }
+
+.card .card-number {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+}
+.card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+.card p {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--muted);
+}
+.card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease,
+                border-color 0.3s, transform 0.3s;
+}
+
+/* ── BLOCO DE MISSÃO ───────────────────────────────────────── */
+.mission-block {
+    border-left: 2px solid var(--gold);
+    padding: 24px 32px;
+    margin-bottom: 80px;
+    background: rgba(201, 168, 76, 0.04);
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 1.1s;
+}
+.mission-block .mission-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.mission-block blockquote {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: #c8d8e8;
+}
+
+/* ── COORDENADAS ───────────────────────────────────────────── */
+.coordinates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 80px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.3s;
+}
+.coordinates .coord-item strong {
+    display: block;
+    color: var(--gold-light);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* ── CTA ───────────────────────────────────────────────────── */
+.cta-area {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.5s;
+}
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 580px) {
+    header { gap: 16px; }
+    .coordinates { gap: 20px; }
+}

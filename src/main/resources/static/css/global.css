@@ -1,0 +1,159 @@
+/* ============================================================
+   GLOBAL.CSS — estilos compartilhados entre todas as páginas
+   ============================================================ */
+
+/* ── VARIÁVEIS ─────────────────────────────────────────────── */
+:root {
+    --navy:         #0a1628;
+    --navy-mid:     #112240;
+    --navy-light:   #1d3461;
+    --gold:         #c9a84c;
+    --gold-light:   #e8c96a;
+    --white:        #f0f4f8;
+    --muted:        #8899aa;
+    --accent:       #2980b9;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Source Sans 3', sans-serif;
+    --font-mono:    'Share Tech Mono', monospace;
+}
+
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    background-color: var(--navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ── WRAPPER PRINCIPAL ─────────────────────────────────────── */
+.page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+}
+
+/* ── TIPOGRAFIA UTILITÁRIA ─────────────────────────────────── */
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.gold-rule {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 28px 0;
+}
+
+.section-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201, 168, 76, 0.2);
+}
+
+/* ── BOTÃO PRIMÁRIO ────────────────────────────────────────── */
+.btn-primary {
+    display: inline-block;
+    padding: 14px 36px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
+}
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-105%);
+    transition: transform 0.35s ease;
+    z-index: -1;
+}
+.btn-primary:hover { color: var(--navy); }
+.btn-primary:hover::before { transform: translateX(0); }
+
+/* ── LINK DE VOLTAR ────────────────────────────────────────── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 64px;
+    transition: color 0.25s;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+}
+.back-link:hover { color: var(--gold); }
+.back-link .arrow { font-size: 1rem; transition: transform 0.25s; }
+.back-link:hover .arrow { transform: translateX(-4px); }
+
+/* ── RODAPÉ ────────────────────────────────────────────────── */
+footer {
+    margin-top: 100px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(201, 168, 76, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.7s;
+}
+footer .footer-brand { color: var(--gold); }
+
+/* ── ANIMAÇÕES ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 580px) {
+    .page-wrapper { padding: 40px 20px 80px; }
+}

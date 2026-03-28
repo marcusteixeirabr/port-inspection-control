@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boas-vindas | PSCO – DelCap Itajaí</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           VARIÁVEIS E RESET
+           ============================================================ */
+        :root {
+            --navy:      #0a1628;
+            --navy-mid:  #112240;
+            --navy-light:#1d3461;
+            --gold:      #c9a84c;
+            --gold-light:#e8c96a;
+            --white:     #f0f4f8;
+            --muted:     #8899aa;
+            --accent:    #2980b9;
+
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body:    'Source Sans 3', sans-serif;
+            --font-mono:    'Share Tech Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--navy);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-weight: 300;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================
+           CANVAS DE FUNDO (ondas animadas via JS)
+           ============================================================ */
+        #ocean-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.18;
+        }
+
+        /* ============================================================
+           GRID DE RADAR (decorativo)
+           ============================================================ */
+        .radar-decoration {
+            position: fixed;
+            top: -120px;
+            right: -120px;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.12);
+            z-index: 0;
+            animation: radarPulse 6s ease-in-out infinite;
+        }
+        .radar-decoration::before,
+        .radar-decoration::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(201, 168, 76, 0.08);
+            inset: 15%;
+        }
+        .radar-decoration::after { inset: 35%; }
+
+        @keyframes radarPulse {
+            0%, 100% { transform: scale(1);   opacity: 0.6; }
+            50%       { transform: scale(1.04); opacity: 1;   }
+        }
+
+        /* ============================================================
+           WRAPPER PRINCIPAL
+           ============================================================ */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 32px 100px;
+        }
+
+        /* ============================================================
+           CABEÇALHO / IDENTIDADE
+           ============================================================ */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 72px;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeUp 0.8s ease forwards 0.1s;
+        }
+
+        .anchor-icon {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .header-text .label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .header-text h2 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ============================================================
+           LINHA DIVISÓRIA DOURADA
+           ============================================================ */
+        .gold-rule {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            margin-bottom: 32px;
+        }
+
+        /* ============================================================
+           SEÇÃO HERO
+           ============================================================ */
+        .hero {
+            margin-bottom: 80px;
+        }
+
+        .hero .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.25em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.3s;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--white);
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.45s;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            display: block;
+        }
+
+        .hero .intro {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #b0c0d0;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.6s;
+        }
+
+        /* ============================================================
+           CARTÕES DE INFORMAÇÃO
+           ============================================================ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 72px;
+        }
+
+        .card {
+            background: rgba(17, 34, 64, 0.7);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            border-radius: 2px;
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--gold);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.35s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(201, 168, 76, 0.4);
+            transform: translateY(-3px);
+        }
+        .card:hover::before { transform: scaleY(1); }
+
+        .card .card-number {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        /* animação escalonada dos cartões via JS */
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease,
+                        border-color 0.3s, transform 0.3s;
+        }
+
+        /* ============================================================
+           BLOCO DE MISSÃO
+           ============================================================ */
+        .mission-block {
+            border-left: 2px solid var(--gold);
+            padding: 24px 32px;
+            margin-bottom: 80px;
+            background: rgba(201, 168, 76, 0.04);
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards 1.1s;
+        }
+
+        .mission-block .mission-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .mission-block blockquote {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: #c8d8e8;
+        }
+
+        /* ============================================================
+           COORDENADAS / DADOS TÉCNICOS
+           ============================================================ */
+        .coordinates {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-bottom: 80px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--muted);
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 1.3s;
+        }
+
+        .coordinates .coord-item strong {
+            display: block;
+            color: var(--gold-light);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        /* ============================================================
+           BOTÃO CTA
+           ============================================================ */
+        .cta-area {
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 1.5s;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 36px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            transform: translateX(-105%);
+            transition: transform 0.35s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover { color: var(--navy); }
+        .btn-primary:hover::before { transform: translateX(0); }
+
+        /* ============================================================
+           RODAPÉ
+           ============================================================ */
+        footer {
+            margin-top: 100px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(201, 168, 76, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--muted);
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 1.7s;
+        }
+
+        footer .footer-brand { color: var(--gold); }
+
+        /* ============================================================
+           ANIMAÇÕES
+           ============================================================ */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           RESPONSIVO
+           ============================================================ */
+        @media (max-width: 580px) {
+            .page-wrapper { padding: 40px 20px 80px; }
+            header { gap: 16px; }
+            .coordinates { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fundo animado -->
+<canvas id="ocean-canvas"></canvas>
+
+<!-- Decoração de radar -->
+<div class="radar-decoration"></div>
+
+<div class="page-wrapper">
+
+    <!-- ── CABEÇALHO ─────────────────────────────────────────── -->
+    <header>
+        <!-- Ícone de âncora (SVG inline) -->
+        <svg class="anchor-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="14" r="6"/>
+            <line x1="32" y1="20" x2="32" y2="54"/>
+            <line x1="16" y1="30" x2="48" y2="30"/>
+            <path d="M16 54 Q8 50 8 42" stroke-dasharray="none"/>
+            <path d="M48 54 Q56 50 56 42"/>
+            <path d="M16 54 Q24 60 32 54"/>
+            <path d="M48 54 Q40 60 32 54"/>
+        </svg>
+
+        <div class="header-text">
+            <p class="label">Marinha do Brasil</p>
+            <h2>Delegacia da Capitania dos Portos em Itajaí — SC</h2>
+        </div>
+    </header>
+
+    <!-- ── HERO ──────────────────────────────────────────────── -->
+    <section class="hero">
+        <p class="eyebrow">Port State Control — DelCap Itajaí</p>
+        <h1>
+            Bem-vindo ao<br>
+            <span>Controle do<br>Estado do Porto</span>
+        </h1>
+        <div class="gold-rule"></div>
+        <p class="intro">
+            Você acaba de ingressar em uma das equipes mais especializadas da Marinha do Brasil.
+            Como <strong>Port State Control Officer (PSCO)</strong>, sua missão é garantir que os
+            navios que aportam em Itajaí operem com segurança, respeitem o meio ambiente e
+            cumpram as convenções internacionais da IMO.
+        </p>
+    </section>
+
+    <!-- ── CARTÕES ────────────────────────────────────────────── -->
+    <section class="cards-grid" id="cards">
+
+        <div class="card" data-delay="0">
+            <p class="card-number">01 / FUNÇÃO</p>
+            <h3>O que é o PSC?</h3>
+            <p>
+                O Port State Control é um regime de inspeção internacional que permite ao
+                Estado do Porto verificar navios estrangeiros. Itajaí é um dos portos mais
+                movimentados do sul do Brasil, com contêineres, granéis e cabotagem.
+            </p>
+        </div>
+
+        <div class="card" data-delay="150">
+            <p class="card-number">02 / FUNDAMENTO</p>
+            <h3>Convenções IMO</h3>
+            <p>
+                Você atuará com base em SOLAS, MARPOL, STCW, MLC 2006 e outras convenções
+                que regulam segurança da vida no mar, prevenção da poluição e
+                condições de trabalho a bordo.
+            </p>
+        </div>
+
+        <div class="card" data-delay="300">
+            <p class="card-number">03 / AUTORIDADE</p>
+            <h3>Poder de Retenção</h3>
+            <p>
+                Quando deficiências graves são encontradas, o PSCO tem autoridade para
+                <em>deter</em> o navio até a correção, protegendo tripulantes,
+                o meio ambiente e outros usuários do porto.
+            </p>
+        </div>
+
+        <div class="card" data-delay="450">
+            <p class="card-number">04 / EQUIPE</p>
+            <h3>Sua Nova Equipe</h3>
+            <p>
+                Você integra um grupo de oficiais experientes comprometidos com a excelência
+                técnica. Contamos com você para manter o padrão de qualidade das inspeções
+                da DelCap Itajaí.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- ── MISSÃO ─────────────────────────────────────────────── -->
+    <div class="mission-block">
+        <p class="mission-label">Nossa Missão</p>
+        <blockquote>
+            "Garantir que os navios que operam em águas brasileiras atendam aos padrões
+            internacionais de segurança e proteção ambiental — em defesa da vida humana
+            no mar e da soberania nacional nos nossos portos."
+        </blockquote>
+    </div>
+
+    <!-- ── COORDENADAS ────────────────────────────────────────── -->
+    <div class="coordinates">
+        <div class="coord-item">
+            <strong>Posição</strong>
+            26°54'40"S / 048°39'55"W
+        </div>
+        <div class="coord-item">
+            <strong>Porto</strong>
+            Itajaí — Santa Catarina
+        </div>
+        <div class="coord-item">
+            <strong>Autoridade</strong>
+            Marinha do Brasil — DPC
+        </div>
+        <div class="coord-item">
+            <strong>Regime</strong>
+            Acordo de Viña del Mar (PSC)
+        </div>
+    </div>
+
+    <!-- ── CTA ───────────────────────────────────────────────── -->
+    <div class="cta-area">
+        <a href="#" class="btn-primary">Acessar o Sistema →</a>
+        <a href="/sobre" class="btn-primary">Conheça o PSC →</a>
+    </div>
+
+    <!-- ── RODAPÉ ─────────────────────────────────────────────── -->
+    <footer>
+        <span class="footer-brand">DelCap Itajaí / PSC</span>
+        <span id="clock"></span>
+        <span>Sistema Interno — Uso Restrito</span>
+    </footer>
+
+</div><!-- /page-wrapper -->
+
+
+<script>
+    /* ================================================================
+       1. ONDAS NO CANVAS DE FUNDO
+       Desenha senóides animadas para simular o oceano.
+    ================================================================ */
+    (function () {
+        const canvas = document.getElementById('ocean-canvas');
+        const ctx    = canvas.getContext('2d');
+        let W, H, t = 0;
+
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const waves = [
+            { amp: 40, freq: 0.008, speed: 0.012, y: 0.55, alpha: 0.5 },
+            { amp: 25, freq: 0.013, speed: 0.018, y: 0.62, alpha: 0.35 },
+            { amp: 15, freq: 0.020, speed: 0.025, y: 0.70, alpha: 0.2  },
+        ];
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            waves.forEach(wave => {
+                ctx.beginPath();
+                ctx.moveTo(0, wave.y * H);
+                for (let x = 0; x <= W; x += 3) {
+                    const y = wave.y * H
+                            + Math.sin(x * wave.freq + t * wave.speed * 60) * wave.amp;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(W, H);
+                ctx.lineTo(0, H);
+                ctx.closePath();
+
+                const grad = ctx.createLinearGradient(0, wave.y * H, 0, H);
+                grad.addColorStop(0, `rgba(41, 128, 185, ${wave.alpha})`);
+                grad.addColorStop(1, `rgba(10, 22, 40, 0)`);
+                ctx.fillStyle = grad;
+                ctx.fill();
+            });
+            t++;
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
+
+    /* ================================================================
+       2. ANIMAÇÃO ESCALONADA DOS CARTÕES
+       Usa IntersectionObserver para revelar cada cartão quando
+       entra na viewport, com um atraso configurável via data-delay.
+    ================================================================ */
+    (function () {
+        const cards = document.querySelectorAll('.card');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.dataset.delay) || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        cards.forEach(card => observer.observe(card));
+    })();
+
+    /* ================================================================
+       3. RELÓGIO NO RODAPÉ
+       Atualiza a hora em tempo real no elemento #clock.
+    ================================================================ */
+    (function () {
+        const clockEl = document.getElementById('clock');
+
+        function updateClock() {
+            const now = new Date();
+            const opts = {
+                timeZone: 'America/Sao_Paulo',
+                hour:   '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            clockEl.textContent = now.toLocaleTimeString('pt-BR', opts) + ' BRT';
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    })();
+</script>
+
+</body>
+</html>
