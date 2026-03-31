@@ -1,0 +1,147 @@
+/* ============================================================
+   NAVIO-FORM.CSS — formulário de identificação de navio
+   ============================================================ */
+
+/* ── FUNDO COM GRADE (mesmo padrão da página Sobre) ───────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.side-line {
+    position: fixed;
+    left: 28px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+    z-index: 0;
+}
+
+/* ── CABEÇALHO ─────────────────────────────────────────────── */
+.page-header {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.25s;
+}
+.page-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+.page-header h1 em { color: var(--gold); font-style: normal; }
+.page-header .lead {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #b0c0d0;
+    max-width: 520px;
+}
+
+/* ── FORMULÁRIO ────────────────────────────────────────────── */
+.navio-form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+/* ── GRUPO DE CAMPO ────────────────────────────────────────── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+/* ── LABEL ─────────────────────────────────────────────────── */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.label-number {
+    color: var(--gold);
+    font-size: 0.65rem;
+}
+
+/* ── INPUT / SELECT ────────────────────────────────────────── */
+.form-input {
+    background: rgba(17, 34, 64, 0.8);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.97rem;
+    font-weight: 400;
+    padding: 14px 18px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    width: 100%;
+}
+
+.form-input::placeholder { color: var(--muted); opacity: 0.6; }
+
+/* cor do text no input date (webkit) */
+.form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6) sepia(1) saturate(2) hue-rotate(5deg);
+    cursor: pointer;
+}
+
+.form-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+/* select: remove seta padrão e adiciona a nossa */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 44px;
+    cursor: pointer;
+}
+
+/* select options herdam o fundo escuro no Firefox */
+.form-select option {
+    background-color: var(--navy-mid);
+    color: var(--white);
+}
+
+/* ── ESTADO DE ERRO ────────────────────────────────────────── */
+.form-group.has-error .form-input {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.form-error {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: #e74c3c;
+    letter-spacing: 0.05em;
+}
+
+/* ── AÇÕES ─────────────────────────────────────────────────── */
+.form-actions {
+    padding-top: 8px;
+}
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 580px) {
+    .side-line { display: none; }
+}

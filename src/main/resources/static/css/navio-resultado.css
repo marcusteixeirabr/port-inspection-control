@@ -1,0 +1,219 @@
+/* ============================================================
+   NAVIO-RESULTADO.CSS — página de resultado da análise de risco
+   ============================================================ */
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.side-line {
+    position: fixed;
+    left: 28px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+    z-index: 0;
+}
+
+/* ── CABEÇALHO ─────────────────────────────────────────────── */
+.page-header {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.page-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+.navio-tipo {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+}
+
+/* ── PAINEL DE RESULTADO ───────────────────────────────────── */
+.resultado-painel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 64px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.45s;
+}
+
+/* ── CARD BASE ─────────────────────────────────────────────── */
+.resultado-card {
+    padding: 32px 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+.resultado-card:hover { transform: translateY(-3px); }
+
+/* barra superior colorida */
+.resultado-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+}
+
+.resultado-card-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.7;
+}
+.resultado-card-valor {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+.resultado-card-desc {
+    font-size: 0.83rem;
+    line-height: 1.65;
+    opacity: 0.75;
+    margin-bottom: 20px;
+}
+.resultado-card-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    border-radius: 2px;
+    display: inline-block;
+    background: rgba(0,0,0,0.2);
+}
+
+/* ================================================================
+   CORES POR GRAU DE RISCO
+   As classes abaixo são adicionadas dinamicamente pelo Thymeleaf
+   via th:classappend="${resultado.grauRisco.classeCss}"
+================================================================ */
+
+/* ALTO RISCO — vermelho/alaranjado */
+.risco-alto {
+    background: rgba(180, 40, 40, 0.12);
+    border-color: rgba(200, 60, 60, 0.3);
+    color: #f5b8b8;
+}
+.risco-alto::before    { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.risco-alto .resultado-card-valor { color: #ff6b6b; }
+
+/* RISCO PADRÃO — âmbar/dourado */
+.risco-padrao {
+    background: rgba(180, 130, 30, 0.12);
+    border-color: rgba(200, 160, 50, 0.3);
+    color: #f0d080;
+}
+.risco-padrao::before  { background: linear-gradient(90deg, #c9a84c, #e8c96a); }
+.risco-padrao .resultado-card-valor { color: var(--gold-light); }
+
+/* BAIXO RISCO — verde marinho */
+.risco-baixo {
+    background: rgba(30, 130, 90, 0.12);
+    border-color: rgba(46, 160, 110, 0.3);
+    color: #90dbb8;
+}
+.risco-baixo::before   { background: linear-gradient(90deg, #1e8449, #2ecc71); }
+.risco-baixo .resultado-card-valor { color: #58d68d; }
+
+/* ================================================================
+   CORES POR PRIORIDADE
+   Idem — classes adicionadas via th:classappend
+================================================================ */
+
+/* PRIORIDADE I — vermelho urgente */
+.prioridade-1 {
+    background: rgba(160, 30, 30, 0.15);
+    border-color: rgba(200, 50, 50, 0.35);
+    color: #f5b8b8;
+}
+.prioridade-1::before  { background: linear-gradient(90deg, #922b21, #e74c3c); }
+.prioridade-1 .resultado-card-valor { color: #ff6b6b; }
+
+/* PRIORIDADE II — laranja/atenção */
+.prioridade-2 {
+    background: rgba(160, 100, 20, 0.15);
+    border-color: rgba(200, 140, 40, 0.35);
+    color: #f5d080;
+}
+.prioridade-2::before  { background: linear-gradient(90deg, #d35400, #f39c12); }
+.prioridade-2 .resultado-card-valor { color: #f8c471; }
+
+/* SEM PRIORIDADE — azul calmo */
+.prioridade-0 {
+    background: rgba(20, 80, 140, 0.15);
+    border-color: rgba(41, 128, 185, 0.3);
+    color: #a9cce3;
+}
+.prioridade-0::before  { background: linear-gradient(90deg, #1a5276, #2980b9); }
+.prioridade-0 .resultado-card-valor { color: #7fb3d3; }
+
+/* ── DADOS TÉCNICOS ────────────────────────────────────────── */
+.dados-tecnicos {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+}
+
+.dados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: rgba(201, 168, 76, 0.1);
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    margin-top: 8px;
+}
+
+.dado-item {
+    background: var(--navy-mid);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: background 0.2s;
+}
+.dado-item:hover { background: rgba(29, 52, 97, 0.9); }
+
+.dado-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+.dado-valor {
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+/* ── AÇÕES ─────────────────────────────────────────────────── */
+.acoes {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.9s;
+}
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .resultado-painel { grid-template-columns: 1fr; }
+    .side-line { display: none; }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificação de Navio | DelCap Itajaí</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/navio-form.css">
+</head>
+<body>
+
+<div class="side-line"></div>
+
+<div class="page-wrapper">
+
+    <!-- ── VOLTAR ─────────────────────────────────────────────── -->
+    <a href="/" class="back-link">
+        <span class="arrow">←</span> Página inicial
+    </a>
+
+    <!-- ── CABEÇALHO ──────────────────────────────────────────── -->
+    <div class="page-header">
+        <p class="eyebrow">PSC — DelCap Itajaí / CIALA</p>
+        <h1>Identificação<br>de <em>Navio</em></h1>
+        <div class="gold-rule"></div>
+        <p class="lead">
+            Preencha os dados do navio para calcular o grau de risco e
+            a prioridade de inspeção conforme o Acordo de Viña del Mar.
+        </p>
+    </div>
+
+    <!-- ================================================================
+         FORMULÁRIO
+         th:action: define para onde o POST vai (/navios/identificar)
+         th:object: associa o formulário ao objeto "navio" que o
+                    Controller colocou no Model — permite usar *{campo}
+                    nos campos internos.
+         method="post": envia os dados no corpo da requisição (não na URL)
+    ================================================================ -->
+    <form th:action="@{/navios/identificar}"
+          th:object="${navio}"
+          method="post"
+          class="navio-form"
+          novalidate>
+
+        <!-- ── NOME DO NAVIO ───────────────────────────────────── -->
+        <div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? 'has-error'">
+            <!--
+                th:classappend: adiciona a classe "has-error" ao div
+                se o campo "nome" tiver erro de validação.
+                #fields.hasErrors('nome') retorna true/false.
+            -->
+            <label for="nome" class="form-label">
+                <span class="label-number">01</span>
+                Nome do Navio
+            </label>
+            <!--
+                th:field="*{nome}": vincula este input ao campo "nome"
+                do objeto NavioForm. O Spring gera automaticamente:
+                  id="nome" name="nome" value="[valor atual]"
+            -->
+            <input type="text"
+                   th:field="*{nome}"
+                   class="form-input"
+                   placeholder="Ex: MV Atlantic Pioneer"
+                   autocomplete="off">
+            <!--
+                th:errors="*{nome}": exibe a mensagem de erro do campo
+                "nome" se houver falha de validação.
+                th:if: só renderiza o elemento se houver erros.
+            -->
+            <span class="form-error" th:if="${#fields.hasErrors('nome')}"
+                  th:errors="*{nome}"></span>
+        </div>
+
+        <!-- ── TIPO DO NAVIO ───────────────────────────────────── -->
+        <div class="form-group" th:classappend="${#fields.hasErrors('tipo')} ? 'has-error'">
+            <label for="tipo" class="form-label">
+                <span class="label-number">02</span>
+                Tipo do Navio
+            </label>
+            <!--
+                th:field="*{tipo}": vincula o select ao campo "tipo".
+                th:each: itera sobre a lista "tiposNavio" que o Controller
+                         colocou no Model, criando uma <option> para cada tipo.
+                th:value: define o valor enviado no POST (nome da constante do enum).
+                th:text: define o texto visível (label do enum).
+                th:selected: marca a opção como selecionada se bater com o valor atual.
+            -->
+            <select th:field="*{tipo}" class="form-input form-select">
+                <option value="" disabled selected>Selecione o tipo...</option>
+                <option th:each="tipo : ${tiposNavio}"
+                        th:value="${tipo}"
+                        th:text="${tipo.label}">
+                </option>
+            </select>
+            <span class="form-error" th:if="${#fields.hasErrors('tipo')}"
+                  th:errors="*{tipo}"></span>
+        </div>
+
+        <!-- ── ANO DE CONSTRUÇÃO ───────────────────────────────── -->
+        <div class="form-group" th:classappend="${#fields.hasErrors('anoConstrucao')} ? 'has-error'">
+            <label for="anoConstrucao" class="form-label">
+                <span class="label-number">03</span>
+                Ano de Construção
+            </label>
+            <input type="number"
+                   th:field="*{anoConstrucao}"
+                   class="form-input"
+                   placeholder="Ex: 1998"
+                   min="1900"
+                   max="2100">
+            <span class="form-error" th:if="${#fields.hasErrors('anoConstrucao')}"
+                  th:errors="*{anoConstrucao}"></span>
+        </div>
+
+        <!-- ── ÚLTIMA INSPEÇÃO ─────────────────────────────────── -->
+        <div class="form-group" th:classappend="${#fields.hasErrors('ultimaInspecao')} ? 'has-error'">
+            <label for="ultimaInspecao" class="form-label">
+                <span class="label-number">04</span>
+                Data da Última Inspeção CIALA
+            </label>
+            <!--
+                type="date": exibe o seletor de data nativo do navegador.
+                O Spring converte automaticamente o formato "yyyy-MM-dd"
+                (padrão do input date) para LocalDate.
+            -->
+            <input type="date"
+                   th:field="*{ultimaInspecao}"
+                   class="form-input">
+            <span class="form-error" th:if="${#fields.hasErrors('ultimaInspecao')}"
+                  th:errors="*{ultimaInspecao}"></span>
+        </div>
+
+        <!-- ── BOTÃO SUBMIT ────────────────────────────────────── -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                Calcular Risco e Prioridade →
+            </button>
+        </div>
+
+    </form><!-- /form -->
+
+    <!-- ── RODAPÉ ─────────────────────────────────────────────── -->
+    <footer>
+        <span class="footer-brand">DelCap Itajaí / PSC</span>
+        <span id="clock"></span>
+        <span>Sistema Interno — Uso Restrito</span>
+    </footer>
+
+</div>
+
+<script src="/js/global.js"></script>
+</body>
+</html>

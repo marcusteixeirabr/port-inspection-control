@@ -210,8 +210,9 @@ header {
 
 /* ── CTA ───────────────────────────────────────────────────── */
 .cta-area {
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 1.5s;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 /* ── RESPONSIVO ────────────────────────────────────────────── */

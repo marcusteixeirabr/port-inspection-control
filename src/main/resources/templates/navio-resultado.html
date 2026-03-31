@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+        th:text no title: usa o nome do navio dinamicamente no título da aba.
+        O "|...|" é a sintaxe de string literal do Thymeleaf (como template strings).
+    -->
+    <title th:text="${resultado.nome} + ' — Resultado PSC | DelCap Itajaí'">Resultado PSC</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/navio-resultado.css">
+</head>
+<body>
+
+<div class="side-line"></div>
+
+<div class="page-wrapper">
+
+    <!-- ── VOLTAR ─────────────────────────────────────────────── -->
+    <a href="/navios/identificar" class="back-link">
+        <span class="arrow">←</span> Nova identificação
+    </a>
+
+    <!-- ── CABEÇALHO ──────────────────────────────────────────── -->
+    <div class="page-header">
+        <p class="eyebrow">Resultado da Análise de Risco</p>
+        <!--
+            th:text: substitui o conteúdo do elemento pelo valor da expressão.
+            ${resultado.nome} chama resultado.getNome() por baixo dos panos.
+        -->
+        <h1 th:text="${resultado.nome}">Nome do Navio</h1>
+        <div class="gold-rule"></div>
+        <!--
+            th:text com expressão composta:
+            resultado.tipo é um enum TipoNavio — .label acessa getTipo().getLabel()
+        -->
+        <p class="navio-tipo" th:text="${resultado.tipo.label}">Tipo do Navio</p>
+    </div>
+
+    <!-- ================================================================
+         PAINEL PRINCIPAL: GRAU DE RISCO + PRIORIDADE
+    ================================================================ -->
+    <div class="resultado-painel">
+
+        <!-- ── GRAU DE RISCO ───────────────────────────────────── -->
+        <!--
+            th:classappend: adiciona a classe CSS dinâmica do enum
+            (risco-alto, risco-padrao ou risco-baixo) ao div.
+            resultado.grauRisco.classeCss chama getClasseCss() do enum.
+        -->
+        <div class="resultado-card" th:classappend="${resultado.grauRisco.classeCss}">
+            <div class="resultado-card-label">Grau de Risco</div>
+            <div class="resultado-card-valor" th:text="${resultado.grauRisco.label}">—</div>
+            <div class="resultado-card-desc"  th:text="${resultado.grauRisco.descricao}">—</div>
+            <div class="resultado-card-badge">
+                <span th:text="|${resultado.idadeAnos} anos de operação|">—</span>
+            </div>
+        </div>
+
+        <!-- ── PRIORIDADE ──────────────────────────────────────── -->
+        <div class="resultado-card" th:classappend="${resultado.prioridade.classeCss}">
+            <div class="resultado-card-label">Prioridade de Inspeção</div>
+            <div class="resultado-card-valor" th:text="${resultado.prioridade.label}">—</div>
+            <div class="resultado-card-desc"  th:text="${resultado.prioridade.descricao}">—</div>
+            <div class="resultado-card-badge">
+                <!--
+                    Expressão condicional Thymeleaf:
+                    ${condicao} ? 'valor se true' : 'valor se false'
+                    Aqui tratamos o singular/plural de "mês/meses".
+                -->
+                <span th:text="${resultado.mesesDesdeInspecao == 1}
+                               ? '1 mês desde a última inspeção'
+                               : |${resultado.mesesDesdeInspecao} meses desde a última inspeção|">—</span>
+            </div>
+        </div>
+
+    </div><!-- /resultado-painel -->
+
+    <!-- ================================================================
+         DADOS TÉCNICOS DO NAVIO
+    ================================================================ -->
+    <div class="dados-tecnicos" id="dados">
+        <p class="section-label">Dados Registrados</p>
+
+        <div class="dados-grid">
+
+            <div class="dado-item">
+                <span class="dado-label">Nome</span>
+                <span class="dado-valor" th:text="${resultado.nome}">—</span>
+            </div>
+
+            <div class="dado-item">
+                <span class="dado-label">Tipo</span>
+                <span class="dado-valor" th:text="${resultado.tipo.label}">—</span>
+            </div>
+
+            <div class="dado-item">
+                <span class="dado-label">Ano de Construção</span>
+                <span class="dado-valor" th:text="${resultado.anoConstrucao}">—</span>
+            </div>
+
+            <div class="dado-item">
+                <span class="dado-label">Idade do Navio</span>
+                <span class="dado-valor" th:text="|${resultado.idadeAnos} anos|">—</span>
+            </div>
+
+            <div class="dado-item">
+                <span class="dado-label">Última Inspeção CIALA</span>
+                <!--
+                    #temporals.format(): utilitário do Thymeleaf para formatar datas.
+                    Converte LocalDate para o padrão brasileiro dd/MM/yyyy.
+                -->
+                <span class="dado-valor"
+                      th:text="${#temporals.format(resultado.ultimaInspecao, 'dd/MM/yyyy')}">—</span>
+            </div>
+
+            <div class="dado-item">
+                <span class="dado-label">Meses desde Inspeção</span>
+                <span class="dado-valor" th:text="${resultado.mesesDesdeInspecao}">—</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── AÇÕES ───────────────────────────────────────────────── -->
+    <div class="acoes">
+        <a href="/navios/identificar" class="btn-primary">Nova Identificação →</a>
+    </div>
+
+    <!-- ── RODAPÉ ─────────────────────────────────────────────── -->
+    <footer>
+        <span class="footer-brand">DelCap Itajaí / PSC</span>
+        <span id="clock"></span>
+        <span>Sistema Interno — Uso Restrito</span>
+    </footer>
+
+</div>
+
+<script src="/js/global.js"></script>
+<script src="/js/navio-resultado.js"></script>
+</body>
+</html>
