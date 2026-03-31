@@ -1,0 +1,260 @@
+/* ============================================================
+   INSPECOES.CSS — página de registro de inspeções
+   ============================================================ */
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.side-line {
+    position: fixed;
+    left: 28px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.3), transparent);
+    z-index: 0;
+}
+
+/* ── CABEÇALHO ─────────────────────────────────────────────── */
+.page-header {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.page-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+.page-header h1 em { color: var(--gold); font-style: normal; }
+.page-header .lead { font-size: 1rem; line-height: 1.8; color: #b0c0d0; }
+
+/* ── FLASH MESSAGES ────────────────────────────────────────── */
+.flash {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+}
+.flash-sucesso {
+    background: rgba(30, 130, 90, 0.15);
+    border: 1px solid rgba(46, 160, 110, 0.3);
+    color: #58d68d;
+}
+.flash-erro {
+    background: rgba(180, 40, 40, 0.15);
+    border: 1px solid rgba(200, 60, 60, 0.3);
+    color: #ff6b6b;
+}
+
+/* ── TABELA WRAPPER ────────────────────────────────────────── */
+.tabela-wrapper {
+    overflow-x: auto;
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+/* ── TABELA ────────────────────────────────────────────────── */
+.tabela-inspecoes {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+}
+
+/* ── CABEÇALHO DA TABELA ───────────────────────────────────── */
+.tabela-inspecoes thead tr {
+    background: rgba(201, 168, 76, 0.08);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+.tabela-inspecoes th {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 400;
+}
+
+/* ── LINHAS ────────────────────────────────────────────────── */
+.tabela-inspecoes tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.2s;
+}
+.tabela-inspecoes tbody tr:hover {
+    background: rgba(29, 52, 97, 0.4);
+}
+.tabela-inspecoes td {
+    padding: 12px 16px;
+    color: #b0c0d0;
+    vertical-align: middle;
+}
+
+/* ── LINHA DE NOVA INSPEÇÃO ────────────────────────────────── */
+.linha-nova {
+    background: rgba(201, 168, 76, 0.04) !important;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.15) !important;
+}
+.linha-nova:hover {
+    background: rgba(201, 168, 76, 0.07) !important;
+}
+
+/* ── LINHA EM EDIÇÃO ───────────────────────────────────────── */
+.linha-editando {
+    background: rgba(41, 128, 185, 0.08) !important;
+    border-bottom: 1px solid rgba(41, 128, 185, 0.2) !important;
+}
+
+/* ── BADGES ────────────────────────────────────────────────── */
+.novo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(201, 168, 76, 0.15);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    color: var(--gold);
+    font-size: 1rem;
+    font-weight: 300;
+}
+.id-badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+}
+
+/* ── COLUNAS ───────────────────────────────────────────────── */
+.col-id     { width: 50px; }
+.col-data   { width: 160px; }
+.col-navio  { /* ocupa o resto */ }
+.col-acoes  { width: 200px; white-space: nowrap; }
+
+/* ── INPUTS DENTRO DA TABELA ───────────────────────────────── */
+.input-tabela {
+    background: rgba(10, 22, 40, 0.6);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 7px 12px;
+    border-radius: 2px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-tabela:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.1);
+}
+.input-tabela[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6) sepia(1) saturate(2) hue-rotate(5deg);
+    cursor: pointer;
+}
+
+/* ── BOTÕES DE AÇÃO ────────────────────────────────────────── */
+.btn-acao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.btn-salvar {
+    border-color: rgba(46, 160, 110, 0.4);
+    color: #58d68d;
+}
+.btn-salvar:hover {
+    background: rgba(30, 130, 90, 0.15);
+    border-color: rgba(46, 160, 110, 0.7);
+}
+
+.btn-editar {
+    border-color: rgba(201, 168, 76, 0.3);
+    color: var(--gold);
+}
+.btn-editar:hover {
+    background: rgba(201, 168, 76, 0.1);
+    border-color: rgba(201, 168, 76, 0.6);
+}
+
+.btn-remover {
+    border-color: rgba(200, 60, 60, 0.3);
+    color: #e74c3c;
+}
+.btn-remover:hover {
+    background: rgba(180, 40, 40, 0.15);
+    border-color: rgba(200, 60, 60, 0.6);
+}
+
+.btn-cancelar {
+    border-color: rgba(136, 153, 170, 0.3);
+    color: var(--muted);
+}
+.btn-cancelar:hover {
+    background: rgba(136, 153, 170, 0.1);
+    border-color: rgba(136, 153, 170, 0.5);
+}
+
+/* ── TABELA VAZIA ──────────────────────────────────────────── */
+.tabela-vazia {
+    text-align: center;
+    padding: 40px !important;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+}
+
+/* ── CONTADOR E LINK CONSOLE ───────────────────────────────── */
+.contador {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+}
+.link-console {
+    color: var(--gold);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+.link-console:hover { opacity: 0.7; }
+
+/* ── RESPONSIVO ────────────────────────────────────────────── */
+@media (max-width: 580px) {
+    .side-line { display: none; }
+    .col-acoes { width: auto; }
+    .btn-acao span:first-child { display: none; }
+}

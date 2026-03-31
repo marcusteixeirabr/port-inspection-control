@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Inspeções | DelCap Itajaí</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/inspecoes.css">
+</head>
+<body>
+
+<div class="side-line"></div>
+
+<div class="page-wrapper">
+
+    <!-- ── VOLTAR ─────────────────────────────────────────────── -->
+    <a href="/" class="back-link">
+        <span class="arrow">←</span> Página inicial
+    </a>
+
+    <!-- ── CABEÇALHO ──────────────────────────────────────────── -->
+    <div class="page-header">
+        <p class="eyebrow">PSC — DelCap Itajaí / CIALA</p>
+        <h1>Registro de <em>Inspeções</em></h1>
+        <div class="gold-rule"></div>
+        <p class="lead">Cadastre, edite e remova inspeções realizadas pelo PSCO.</p>
+    </div>
+
+    <!-- ================================================================
+         MENSAGENS FLASH (aparecem após redirect)
+         th:if: só renderiza se a variável existir no Model
+         Vêm do RedirectAttributes do Controller
+    ================================================================ -->
+    <div th:if="${sucesso}" class="flash flash-sucesso">
+        <span>✓</span>
+        <span th:text="${sucesso}"></span>
+    </div>
+    <div th:if="${erro}" class="flash flash-erro">
+        <span>✗</span>
+        <span th:text="${erro}"></span>
+    </div>
+
+    <!-- ================================================================
+         TABELA PRINCIPAL
+    ================================================================ -->
+    <div class="tabela-wrapper">
+
+        <table class="tabela-inspecoes">
+            <thead>
+                <tr>
+                    <th class="col-id">#</th>
+                    <th class="col-data">Data</th>
+                    <th class="col-navio">Nome do Navio</th>
+                    <th class="col-acoes">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!-- ================================================================
+                     LINHA DE NOVA INSPEÇÃO (sempre visível no topo da tabela)
+                     th:action e th:method: configuram o form para POST /inspecoes
+                ================================================================ -->
+                <tr class="linha-nova">
+                    <td class="col-id">
+                        <span class="novo-badge">+</span>
+                    </td>
+                    <form th:action="@{/inspecoes}" method="post" id="form-novo">
+                        <td class="col-data">
+                            <input type="date"
+                                   name="dataInspecao"
+                                   th:value="${hoje}"
+                                   class="input-tabela"
+                                   required>
+                        </td>
+                        <td class="col-navio">
+                            <input type="text"
+                                   name="nomeNavio"
+                                   class="input-tabela"
+                                   placeholder="Nome do navio..."
+                                   required
+                                   autocomplete="off">
+                        </td>
+                        <td class="col-acoes">
+                            <button type="submit" class="btn-acao btn-salvar" title="Salvar">
+                                💾 Salvar
+                            </button>
+                        </td>
+                    </form>
+                </tr>
+
+                <!-- ================================================================
+                     LINHAS DE INSPEÇÕES EXISTENTES
+                     th:each: itera sobre a lista "inspecoes" do Model
+                     th:if / th:unless: alterna entre modo leitura e edição
+                ================================================================ -->
+                <tr th:each="insp : ${inspecoes}"
+                    th:classappend="${inspecaoEditando != null and inspecaoEditando.id == insp.id} ? 'linha-editando' : ''">
+
+                    <!-- ID -->
+                    <td class="col-id">
+                        <span class="id-badge" th:text="${insp.id}"></span>
+                    </td>
+
+                    <!--
+                        MODO LEITURA: exibe os dados normalmente
+                        th:unless: renderiza quando NÃO está editando esta linha
+                    -->
+                    <td class="col-data"
+                        th:unless="${inspecaoEditando != null and inspecaoEditando.id == insp.id}">
+                        <!--
+                            #temporals.format(): formata LocalDate para dd/MM/yyyy
+                            Mesmo utilitário que usamos na página de resultado do navio
+                        -->
+                        <span th:text="${#temporals.format(insp.dataInspecao, 'dd/MM/yyyy')}"></span>
+                    </td>
+
+                    <td class="col-navio"
+                        th:unless="${inspecaoEditando != null and inspecaoEditando.id == insp.id}">
+                        <span th:text="${insp.nomeNavio}"></span>
+                    </td>
+
+                    <!-- AÇÕES em modo leitura: botões Editar e Remover -->
+                    <td class="col-acoes"
+                        th:unless="${inspecaoEditando != null and inspecaoEditando.id == insp.id}">
+
+                        <!-- Botão Editar: GET /inspecoes/{id}/editar -->
+                        <a th:href="@{/inspecoes/{id}/editar(id=${insp.id})}"
+                           class="btn-acao btn-editar" title="Editar">
+                            ✏️ Editar
+                        </a>
+
+                        <!--
+                            Botão Remover: POST /inspecoes/{id}/remover
+                            Formulário com método POST — HTML não suporta DELETE nativo.
+                            onsubmit: confirmação antes de remover
+                        -->
+                        <form th:action="@{/inspecoes/{id}/remover(id=${insp.id})}"
+                              method="post"
+                              style="display:inline"
+                              onsubmit="return confirm('Remover esta inspeção?')">
+                            <button type="submit" class="btn-acao btn-remover" title="Remover">
+                                🗑️ Remover
+                            </button>
+                        </form>
+                    </td>
+
+                    <!--
+                        MODO EDIÇÃO: inputs preenchidos com dados atuais
+                        th:if: renderiza SOMENTE na linha que está sendo editada
+                    -->
+                    <form th:if="${inspecaoEditando != null and inspecaoEditando.id == insp.id}"
+                          th:action="@{/inspecoes/{id}(id=${insp.id})}"
+                          method="post">
+
+                        <td class="col-data">
+                            <input type="date"
+                                   name="dataInspecao"
+                                   th:value="${inspecaoEditando.dataInspecao}"
+                                   class="input-tabela"
+                                   required>
+                        </td>
+
+                        <td class="col-navio">
+                            <input type="text"
+                                   name="nomeNavio"
+                                   th:value="${inspecaoEditando.nomeNavio}"
+                                   class="input-tabela"
+                                   required>
+                        </td>
+
+                        <td class="col-acoes">
+                            <button type="submit" class="btn-acao btn-salvar">
+                                💾 Salvar
+                            </button>
+                            <a href="/inspecoes" class="btn-acao btn-cancelar">
+                                ✕ Cancelar
+                            </a>
+                        </td>
+
+                    </form>
+
+                </tr><!-- /th:each -->
+
+                <!-- Mensagem quando não há inspeções -->
+                <tr th:if="${#lists.isEmpty(inspecoes)}">
+                    <td colspan="4" class="tabela-vazia">
+                        Nenhuma inspeção registrada. Use a linha acima para adicionar.
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div><!-- /tabela-wrapper -->
+
+    <!-- ── CONTADOR ───────────────────────────────────────────── -->
+    <div class="contador">
+        <span th:text="${#lists.size(inspecoes)}">0</span> inspeção(ões) registrada(s)
+        &nbsp;·&nbsp;
+        <a href="/h2-console" target="_blank" class="link-console">
+            ver banco de dados ↗
+        </a>
+    </div>
+
+    <!-- ── RODAPÉ ─────────────────────────────────────────────── -->
+    <footer>
+        <span class="footer-brand">DelCap Itajaí / PSC</span>
+        <span id="clock"></span>
+        <span>Sistema Interno — Uso Restrito</span>
+    </footer>
+
+</div>
+
+<script src="/js/global.js"></script>
+<script src="/js/inspecoes.js"></script>
+</body>
+</html>
