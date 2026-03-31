@@ -53,6 +53,7 @@ public class InspecaoService {
      */
     @Transactional(readOnly = true)
     public Optional<Inspecao> buscarPorId(Long id) {
+        if (id == null) return Optional.empty(); // linha 56 — guard clause
         return repository.findById(id);
     }
 
@@ -73,6 +74,7 @@ public class InspecaoService {
      */
     @Transactional
     public boolean atualizar(Long id, String nomeNavio, LocalDate dataInspecao) {
+        if (id == null) return false;            // guard clause antes do findById
         Optional<Inspecao> opcional = repository.findById(id);
         if (opcional.isEmpty()) return false;
 
@@ -89,6 +91,7 @@ public class InspecaoService {
      */
     @Transactional
     public boolean remover(Long id) {
+        if (id == null) return false;            // guard clause
         if (!repository.existsById(id)) return false;
         repository.deleteById(id);
         return true;
