@@ -7,7 +7,6 @@ import br.com.gvi.portinspection.domain.enums.Prioridade;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 
 /**
