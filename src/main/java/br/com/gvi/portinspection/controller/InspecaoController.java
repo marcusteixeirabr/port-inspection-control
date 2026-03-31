@@ -74,17 +74,28 @@ public class InspecaoController {
      * RedirectAttributes.addFlashAttribute(): mensagem temporária
      * que aparece só uma vez após o redirect.
      */
-    @PostMapping
-    public String salvar(
-            @RequestParam @NotBlank String nomeNavio,
-            @RequestParam @NotNull
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInspecao,
-            RedirectAttributes redirect) {
+@PostMapping
+public String salvar(
+        @RequestParam @NotBlank String nomeNavio,
+        @RequestParam @NotNull
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInspecao,
+        RedirectAttributes redirect) {
 
-        service.salvar(nomeNavio.trim(), dataInspecao);
-        redirect.addFlashAttribute("sucesso", "Inspeção registrada com sucesso!");
-        return "redirect:/inspecoes"; // PRG: redireciona para o GET
+    // valida antes de chegar no banco
+    if (dataInspecao.isAfter(LocalDate.now())) {
+        redirect.addFlashAttribute("erro", "A data da inspeção não pode ser futura.");
+        return "redirect:/inspecoes";
     }
+
+    if (nomeNavio == null || nomeNavio.trim().length() < 2) {
+        redirect.addFlashAttribute("erro", "Nome do navio inválido.");
+        return "redirect:/inspecoes";
+    }
+
+    service.salvar(nomeNavio.trim(), dataInspecao);
+    redirect.addFlashAttribute("sucesso", "Inspeção registrada com sucesso!");
+    return "redirect:/inspecoes";
+}
 
     // ── GET /inspecoes/{id}/editar ────────────────────────────
     /**
@@ -118,23 +129,28 @@ public class InspecaoController {
      * e o HiddenHttpMethodFilter do Spring converte.
      * Mas para manter simples, usamos POST mesmo com path diferente.
      */
-    @PostMapping("/{id}")
-    public String atualizar(
-            @PathVariable Long id,
-            @RequestParam @NotBlank String nomeNavio,
-            @RequestParam @NotNull
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInspecao,
-            RedirectAttributes redirect) {
+@PostMapping("/{id}")
+public String atualizar(
+        @PathVariable Long id,
+        @RequestParam @NotBlank String nomeNavio,
+        @RequestParam @NotNull
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInspecao,
+        RedirectAttributes redirect) {
 
-        boolean atualizado = service.atualizar(id, nomeNavio.trim(), dataInspecao);
-
-        if (atualizado) {
-            redirect.addFlashAttribute("sucesso", "Inspeção atualizada com sucesso!");
-        } else {
-            redirect.addFlashAttribute("erro", "Inspeção não encontrada.");
-        }
+    // mesma validação no update
+    if (dataInspecao.isAfter(LocalDate.now())) {
+        redirect.addFlashAttribute("erro", "A data da inspeção não pode ser futura.");
         return "redirect:/inspecoes";
     }
+
+    boolean atualizado = service.atualizar(id, nomeNavio.trim(), dataInspecao);
+    if (atualizado) {
+        redirect.addFlashAttribute("sucesso", "Inspeção atualizada com sucesso!");
+    } else {
+        redirect.addFlashAttribute("erro", "Inspeção não encontrada.");
+    }
+    return "redirect:/inspecoes";
+}
 
     // ── POST /inspecoes/{id}/remover ──────────────────────────
     /**
